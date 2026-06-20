@@ -3,25 +3,130 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Zenitsu Agatsuma — dark-first liquid glass */
+  --background: #08070a;
+  --background-soft: #0e0d12;
+  --foreground: #f5ecd6;
+  --muted: #1a1820;
+  --muted-foreground: #a39e92;
+
+  --primary: #ffd23f; /* electric thunder gold */
+  --primary-strong: #ffb800;
+  --primary-foreground: #100c02;
+
+  --accent: #e23636; /* crimson red */
+  --accent-foreground: #fff5f5;
+
+  --border: rgba(255, 210, 63, 0.22);
+  --ring: rgba(255, 210, 63, 0.55);
+
+  --card: rgba(20, 18, 24, 0.55);
+  --card-border: rgba(255, 210, 63, 0.18);
+
+  /* Trading futuristic accent */
+  --cyan: #00ffff;
+  --lime: #39ff14;
+
+  --radius: 1.75rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-image:
+    radial-gradient(60rem 60rem at 85% -10%, rgba(255, 184, 0, 0.08), transparent 60%),
+    radial-gradient(50rem 50rem at -10% 110%, rgba(226, 54, 54, 0.07), transparent 60%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Liquid glass panel */
+  .glass {
+    background: var(--card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 0 30px rgba(255, 210, 63, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-strong {
+    background: rgba(14, 13, 18, 0.75);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 210, 63, 0.3);
+    box-shadow: 0 0 40px rgba(255, 210, 63, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  /* Claymorphism button surface */
+  .clay {
+    background: #15131a;
+    box-shadow:
+      inset 4px 4px 10px rgba(0, 0, 0, 0.7),
+      inset -4px -4px 10px rgba(255, 255, 255, 0.04);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 24px rgba(255, 210, 63, 0.45);
+  }
+  .text-glow {
+    text-shadow: 0 0 18px rgba(255, 210, 63, 0.45);
+  }
+
+  .ring-thunder {
+    box-shadow: 0 0 0 1px rgba(255, 210, 63, 0.4), 0 0 32px rgba(255, 210, 63, 0.2);
+  }
+}
+
+/* Lightning flicker */
+@keyframes thunder-flicker {
+  0%, 92%, 100% { opacity: 0; }
+  93% { opacity: 0.9; }
+  94% { opacity: 0.2; }
+  95% { opacity: 0.8; }
+  96% { opacity: 0; }
+}
+
+@keyframes drift {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-28px) translateX(14px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-drift { animation: drift 9s ease-in-out infinite; }
+.animate-flicker { animation: thunder-flicker 7s linear infinite; }
+
+.reveal {
+  opacity: 0;
+}
+.reveal.is-visible {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0b0a0e; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 210, 63, 0.3);
+  border-radius: 8px;
 }
