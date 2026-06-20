@@ -1,11 +1,12 @@
-import { ShieldCheck, FileText, Zap, Trophy, Wrench, ArrowRight } from "lucide-react";
-import Link from "next/link";
+"use client";
 
-export const metadata = {
-  title: "Dashboard Overview — Arwan'space",
-};
+import { ShieldCheck, FileText, Zap, Trophy, Wrench, ArrowRight, Gift } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function DashboardPage() {
+  const [claiming, setClaiming] = useState(false);
+
   // Using dummy data for metrics since we're in mock-first approach
   const metrics = {
     cvQuota: "1 / 3",
@@ -14,6 +15,23 @@ export default function DashboardPage() {
     breathPoints: 1250,
     loyaltyTier: "Apprentice",
     utilityQuota: "10 / 50"
+  };
+
+  const handleClaim = async () => {
+    setClaiming(true);
+    try {
+      const res = await fetch("/api/loyalty/daily-claim", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ user_id: "mock-user-id" })
+      });
+      const data = await res.json();
+      alert(`🎉 Gift Claimed: ${data.gift.name}`);
+    } catch {
+      alert("Failed to claim gift");
+    } finally {
+      setClaiming(false);
+    }
   };
 
   return (
@@ -79,18 +97,30 @@ export default function DashboardPage() {
           <div className="mt-2 text-sm text-muted-foreground">Log in tomorrow to keep the streak alive!</div>
         </div>
 
-        <div className="glass-strong rounded-2xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-             <Trophy className="w-16 h-16 text-accent" />
-          </div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-accent/10 rounded-lg">
-              <Trophy className="h-5 w-5 text-accent" />
+        <div className="glass-strong rounded-2xl p-6 relative overflow-hidden group flex flex-col justify-between">
+          <div>
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+               <Trophy className="w-16 h-16 text-accent" />
             </div>
-            <h3 className="font-medium text-muted-foreground">Breath Points</h3>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-accent/10 rounded-lg">
+                <Trophy className="h-5 w-5 text-accent" />
+              </div>
+              <h3 className="font-medium text-muted-foreground">Breath Points</h3>
+            </div>
+            <div className="text-3xl font-display font-bold">{metrics.breathPoints}</div>
+            <div className="mt-1 text-sm text-accent font-medium">Tier: {metrics.loyaltyTier}</div>
           </div>
-          <div className="text-3xl font-display font-bold">{metrics.breathPoints}</div>
-          <div className="mt-2 text-sm text-accent">Tier: {metrics.loyaltyTier}</div>
+          <div className="mt-4 pt-4 border-t border-[var(--card-border)]">
+             <button
+               onClick={handleClaim}
+               disabled={claiming}
+               className="w-full flex items-center justify-center gap-2 py-2 bg-accent/10 text-accent hover:bg-accent/20 rounded-xl text-sm font-bold transition-colors disabled:opacity-50"
+             >
+                <Gift className="h-4 w-4" />
+                {claiming ? "Claiming..." : "Klaim Thunder Gift"}
+             </button>
+          </div>
         </div>
 
         <div className="glass-strong rounded-2xl p-6 relative overflow-hidden group sm:col-span-2 lg:col-span-2">

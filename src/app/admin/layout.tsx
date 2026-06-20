@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { LayoutDashboard, Users, CreditCard, LayoutTemplate, Activity, Wrench, Radio, Image as ImageIcon, MessageSquare, Settings, LogOut, Menu } from "lucide-react";
+import { useState } from "react";
+import { LayoutDashboard, Users, CreditCard, LayoutTemplate, Activity, Wrench, Radio, Image as ImageIcon, MessageSquare, Settings, LogOut, Menu, X } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const adminNavItems = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "User Mgmt", href: "/admin/users", icon: Users },
@@ -16,17 +20,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#050505] text-[#eaeaea] font-sans">
+    <div className="flex min-h-screen bg-[#050505] text-[#eaeaea] font-sans overflow-hidden">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+
       {/* Admin Sidebar - Dark Minimalist Gold Accent */}
-      <aside className="hidden w-64 flex-col border-r border-white/5 bg-black md:flex">
-        <div className="flex h-16 items-center px-6 border-b border-white/5">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 flex-col border-r border-white/5 bg-black transition-transform duration-300 ease-in-out md:static md:flex md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex h-16 items-center justify-between px-6 border-b border-white/5">
           <span className="font-display text-lg font-bold tracking-wider text-primary">COMMAND CENTER</span>
+          <button className="md:hidden text-muted-foreground hover:text-white" onClick={() => setIsSidebarOpen(false)}>
+            <X className="h-5 w-5" />
+          </button>
         </div>
         <nav className="flex-1 space-y-0.5 p-3 overflow-y-auto">
           {adminNavItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-white/50 transition-colors hover:bg-white/5 hover:text-primary"
             >
               <item.icon className="h-4 w-4" />
@@ -46,13 +62,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-screen relative overflow-hidden">
+      <main className="flex-1 flex flex-col min-h-screen relative max-w-full overflow-hidden">
         {/* Subtle background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-        <header className="flex h-16 items-center justify-between border-b border-white/5 bg-black/40 px-6 backdrop-blur-md relative z-10">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-white/5 bg-black/40 px-6 backdrop-blur-md relative z-10">
           <div className="flex items-center md:hidden">
-             <button className="text-white/50 hover:text-primary">
+             <button aria-label="Open Menu" onClick={() => setIsSidebarOpen(true)} className="text-white/50 hover:text-primary">
                 <Menu className="h-5 w-5" />
              </button>
           </div>

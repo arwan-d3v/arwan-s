@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ShieldCheck, Zap, Crown } from "lucide-react";
+import { Check, ShieldCheck, Zap, Crown, CreditCard, ExternalLink } from "lucide-react";
 
 export default function UpgradeSubscriptionPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
   const plans = [
     {
@@ -62,13 +63,37 @@ export default function UpgradeSubscriptionPage() {
   ];
 
   const handleUpgrade = (planId: string) => {
+    setSelectedPlanId(planId);
+  };
+
+  const processPayment = async (provider: 'midtrans' | 'stripe' | 'paypal') => {
+    if (!selectedPlanId) return;
     setIsProcessing(true);
-    // Mocking a payment gateway popup & process
-    setTimeout(() => {
+
+    try {
+      const res = await fetch(`/api/payment/${provider}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan_id: selectedPlanId, billing_cycle: billingCycle, user_email: "user@example.com" }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error);
+
+      // Redirect to the gateway or mock URL
+      if (data.redirect_url) window.location.href = data.redirect_url;
+      else if (data.url) window.location.href = data.url;
+      else if (data.approval_url) window.location.href = data.approval_url;
+      else {
+        alert("Payment URL not found in response.");
+        setIsProcessing(false);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error initializing payment";
+      alert(msg);
       setIsProcessing(false);
-      alert(`[Mock Payment Gateway] Successfully subscribed to ${planId.toUpperCase()} plan! Role has been updated.`);
-      window.location.href = '/dashboard';
-    }, 1500);
+    }
   };
 
   return (
@@ -95,7 +120,7 @@ export default function UpgradeSubscriptionPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
          {plans.map(plan => (
-           <div key={plan.id} className={`relative glass-strong rounded-3xl p-8 border border-[var(--card-border)] transition-all duration-300 ${plan.bgHover}`}>
+           <div key={plan.id} className={`relative glass-strong rounded-3xl p-8 border border-[var(--card-border)] transition-all duration-300 ${plan.bgHover} ${selectedPlanId === plan.id ? 'ring-2 ring-primary/50' : ''}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00E5FF] text-black text-xs font-bold px-4 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.5)]">
                    MOST POPULAR
@@ -112,10 +137,25 @@ export default function UpgradeSubscriptionPage() {
               <button
                 onClick={() => handleUpgrade(plan.id)}
                 disabled={isProcessing}
-                className={`w-full py-3 rounded-xl font-bold text-sm mb-8 transition-colors flex justify-center items-center ${plan.buttonClass}`}
+                className={`w-full py-3 rounded-xl font-bold text-sm mb-4 transition-colors flex justify-center items-center ${plan.buttonClass}`}
               >
-                {isProcessing ? "Processing..." : "Select Plan"}
+                {selectedPlanId === plan.id ? "Selected" : "Select Plan"}
               </button>
+
+              {selectedPlanId === plan.id && (
+                <div className="flex flex-col gap-2 mb-8 bg-black/40 p-3 rounded-xl border border-[var(--card-border)]">
+                   <p className="text-xs text-center text-muted-foreground mb-1">Select Payment Method</p>
+                   <button onClick={() => processPayment('midtrans')} disabled={isProcessing} className="w-full py-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 text-xs rounded-lg flex items-center justify-center gap-2">
+                     <CreditCard className="w-3 h-3" /> Midtrans <ExternalLink className="w-3 h-3 opacity-50" />
+                   </button>
+                   <button onClick={() => processPayment('stripe')} disabled={isProcessing} className="w-full py-2 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-xs rounded-lg flex items-center justify-center gap-2">
+                     <CreditCard className="w-3 h-3" /> Stripe <ExternalLink className="w-3 h-3 opacity-50" />
+                   </button>
+                   <button onClick={() => processPayment('paypal')} disabled={isProcessing} className="w-full py-2 bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 text-xs rounded-lg flex items-center justify-center gap-2">
+                     <CreditCard className="w-3 h-3" /> PayPal <ExternalLink className="w-3 h-3 opacity-50" />
+                   </button>
+                </div>
+              )}
 
               <div className="space-y-4">
                  {plan.features.map((feature, i) => (

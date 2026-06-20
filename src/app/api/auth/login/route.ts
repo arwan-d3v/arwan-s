@@ -47,7 +47,10 @@ export async function POST(request: Request) {
            return NextResponse.json({ error: signUpError.message }, { status: 400 });
          }
 
-         // Trigger should have created profile, return user details
+         // Simulate Referral Code Generation & Streak initialization logic that would be in the trigger:
+         const referralCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+         console.log(`[Gamification] Simulated referral code generation for new user: ${referralCode}`);
+
          const role = email === 'admin@arwan.space' ? 'superadmin' : 'public';
          return NextResponse.json({
             message: 'Signed up successfully',
@@ -64,6 +67,10 @@ export async function POST(request: Request) {
       .select('role')
       .eq('id', data.user.id)
       .single();
+
+    // Gamification Update Streak logic here
+    console.log(`[Gamification] Updating login streak for user ${data.user.id}...`);
+    // Example: await supabase.rpc('update_user_streak', { user_id: data.user.id });
 
     const role = profile?.role || (email === 'admin@arwan.space' ? 'superadmin' : 'public');
 
