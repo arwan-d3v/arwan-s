@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AlertCircle, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
 export function LoginForm() {
@@ -10,8 +11,9 @@ export function LoginForm() {
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
@@ -25,11 +27,32 @@ export function LoginForm() {
     }
 
     setLoading(true);
-    // Auth wiring (Supabase) lands in the backend phase.
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to authenticate");
+      }
+
+      const data = await res.json();
+
+      if (data.role === 'superadmin') {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An error occurred';
+      setError(message);
+    } finally {
       setLoading(false);
-      setError("Authentication is not connected yet — coming in the next phase.");
-    }, 900);
+    }
   }
 
   return (
