@@ -46,7 +46,7 @@ export default function UtilityConverterPage() {
       <div className="glass-strong rounded-2xl p-6 md:p-8 min-h-[400px]">
         {activeTab === "image" && (
           <div className="space-y-6">
-            <h2 className="text-xl font-medium flex items-center gap-2"><Image className="text-primary h-5 w-5" /> Image Converter & Resizer</h2>
+            <h2 className="text-xl font-medium flex items-center gap-2"><Image className="text-primary h-5 w-5" aria-hidden="true" /> Image Converter & Resizer</h2>
             <div className="border-2 border-dashed border-[var(--card-border)] rounded-2xl p-12 text-center hover:bg-white/5 transition-colors cursor-pointer">
                <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                <p className="font-medium">Click or drag image here</p>

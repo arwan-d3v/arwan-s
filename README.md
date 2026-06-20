@@ -1,3 +1,20 @@
+# Arwan'space v1.0.0
+
+A Next.js 14 project built around a "Liquid Glass" and "Claymorphism" aesthetic with a Zenitsu Agatsuma-inspired color palette.
+
+[**Production URL Placeholder: https://arwan.space**]
+
+*(Screenshot Placeholder: Add UI screenshots here)*
+
+## Contributing
+
+We welcome contributions to the Arwan'space ecosystem. When contributing, please ensure:
+1. You utilize the fallback dummy architecture if testing components requiring external APIs.
+2. Code follows the established styling conventions (Liquid Glass & Claymorphism).
+3. `npm run build` succeeds completely before opening a PR.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

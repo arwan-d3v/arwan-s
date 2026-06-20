@@ -19,6 +19,14 @@ export const metadata: Metadata = {
     "portfolio",
     "digital ecosystem",
   ],
+  openGraph: {
+    title: "Arwan'space — Your Professional Hub & Digital Ecosystem",
+    description: "Personal branding, interactive resume, services showcase, and a member ecosystem. Powered by Thunder Breathing.",
+    url: 'https://arwan.space',
+    siteName: "Arwan'space",
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 export const viewport: Viewport = {
