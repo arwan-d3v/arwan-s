@@ -1,0 +1,41 @@
+# Arwan'space Project Status
+
+## ✅ Phase 1 (Completed)
+- All public pages (Gateway `/`, Resume `/resume`, Services `/services`, Explore `/explore`, Login `/login`)
+- Theme implementation (Zenitsu Agatsuma, Liquid Glass, Claymorphism)
+- Interactive resume, Services page, Explore page
+- Login page UI
+
+## 🚧 Phase 2 (In Progress)
+
+### [ ] Task 1: Setup Supabase, Auth, and Middleware
+- [x] Create `.env.example`
+- [x] Create `summary-update-agent.md`
+- [ ] Setup `@supabase/ssr` (client/server files)
+- [ ] Create `types/supabase.ts` definitions
+- [ ] Create `middleware.ts` for route protection and mock fallback
+- [ ] Connect `login/page.tsx` with mock auth and profile bootstrap
+
+### [x] Task 2: User Dashboard Shell & Overview
+- [x] Create dashboard layout with sidebar
+- [x] Create overview page with metrics and quick actions
+
+### [x] Task 3: CV Builder
+- [x] Define theme engine configurations
+- [x] Create 6-step CV wizard
+- [x] Generate public view at `/r/[slug]`
+
+### [x] Task 4: Trading Module
+- [x] Create dashboard with Recharts line chart
+- [x] Implement dummy signals with polling
+
+### [x] Task 5: Utility Converter & Upgrade Subscription
+- [x] Build utility pages (mock functionality)
+- [x] Build subscription upgrade page (mock functionality)
+
+### [x] Task 6: Admin Command Center
+- [x] Create admin shell layout
+- [x] Build stub pages for 10 management modules
+
+### [x] Task 7: API Routes
+- [x] Develop associated API routes
