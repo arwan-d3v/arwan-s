@@ -11,18 +11,6 @@ const SUGGESTIONS = [
   "Help me with trading signals",
 ];
 
-// Lightweight mock assistant. Real Gemini Flash wiring comes in the backend phase.
-function mockReply(input: string): string {
-  const lower = input.toLowerCase();
-  if (lower.includes("price") || lower.includes("cost"))
-    return "Pricing depends on scope — landing pages start at $149, invitations at $29. Want a tailored quote? Tap \"Request a quote\" below.";
-  if (lower.includes("invitation"))
-    return "Beautiful choice! Our digital invitations include animations, RSVP, and a gallery. Shall I prepare a quote?";
-  if (lower.includes("trade") || lower.includes("signal"))
-    return "Algorithmic Trade gives you live, confidence-scored signals in a futuristic dashboard. It's a member feature — sign in to explore.";
-  return "Got it! I can help with web design, invitations, portfolios, SaaS, and more. Tell me a bit about your goal, or request a quote and I'll loop in Arwan.";
-}
-
 export function AiCompanion() {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -35,15 +23,36 @@ export function AiCompanion() {
   const [sent, setSent] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  function send(text: string) {
+  async function send(text: string) {
     const trimmed = text.trim();
     if (!trimmed) return;
+
     setMessages((m) => [...m, { role: "user", text: trimmed }]);
     setInput("");
-    setTimeout(() => {
-      setMessages((m) => [...m, { role: "ai", text: mockReply(trimmed) }]);
-      endRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 400);
+
+    // Optimistic scrolling
+    setTimeout(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+
+    try {
+      const res = await fetch("/api/ai-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: trimmed }),
+      });
+
+      const data = await res.json();
+
+      if (data.reply) {
+        setMessages((m) => [...m, { role: "ai", text: data.reply }]);
+      } else {
+        setMessages((m) => [...m, { role: "ai", text: "Sorry, I couldn't process that request right now." }]);
+      }
+    } catch (error) {
+      console.error(error);
+      setMessages((m) => [...m, { role: "ai", text: "Sorry, my circuits are overloaded!" }]);
+    } finally {
+      setTimeout(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    }
   }
 
   return (

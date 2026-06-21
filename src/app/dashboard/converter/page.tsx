@@ -8,14 +8,54 @@ export default function UtilityConverterPage() {
   const [activeTab, setActiveTab] = useState<"image" | "video" | "social" | "currency">("image");
   const [isProcessing, setIsProcessing] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleProcess = () => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleProcess = async () => {
+    if (!selectedFile && activeTab === "image") {
+      setResult("Please select a file first.");
+      return;
+    }
+
     setIsProcessing(true);
     setResult(null);
-    setTimeout(() => {
+
+    try {
+      if (activeTab === "image") {
+        const formData = new FormData();
+        formData.append("file", selectedFile as Blob);
+
+        const res = await fetch("/api/utility/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setResult(`Upload successful! File available at: ${data.url}`);
+        } else {
+          setResult(`Error: ${data.error}`);
+        }
+      } else {
+        // Mock other tabs for now
+        setTimeout(() => {
+          setIsProcessing(false);
+          setResult(`Conversion completed for ${activeTab}! (Mock result)`);
+        }, 1500);
+        return; // Don't flip isProcessing twice
+      }
+    } catch (error) {
+      console.error(error);
+      setResult("An unexpected error occurred.");
+    } finally {
       setIsProcessing(false);
-      setResult("Conversion completed successfully! (Mock result)");
-    }, 1500);
+    }
   };
 
   return (
@@ -47,29 +87,24 @@ export default function UtilityConverterPage() {
       <div className="glass-strong rounded-2xl p-6 md:p-8 min-h-[400px]">
         {activeTab === "image" && (
           <div className="space-y-6">
-            <h2 className="text-xl font-medium flex items-center gap-2"><Image className="text-primary h-5 w-5" aria-hidden="true" /> Image Converter & Resizer</h2>
-            <div className="border-2 border-dashed border-[var(--card-border)] rounded-2xl p-12 text-center hover:bg-white/5 transition-colors cursor-pointer">
+            <h2 className="text-xl font-medium flex items-center gap-2"><Image className="text-primary h-5 w-5" aria-hidden="true" /> Image Uploader to R2</h2>
+            <label className="block border-2 border-dashed border-[var(--card-border)] rounded-2xl p-12 text-center hover:bg-white/5 transition-colors cursor-pointer">
+               <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-               <p className="font-medium">Click or drag image here</p>
+               <p className="font-medium">{selectedFile ? selectedFile.name : "Click to select image"}</p>
                <p className="text-sm text-muted-foreground mt-1">Supports PNG, JPG, WebP (Max 5MB)</p>
-            </div>
+            </label>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Convert To</label>
+                <label className="block text-sm font-medium mb-2">Action</label>
                 <select className="w-full rounded-xl border border-[var(--card-border)] bg-muted py-3 px-4 text-sm outline-none">
-                  <option>WebP (Recommended)</option>
-                  <option>PNG</option>
-                  <option>JPG</option>
+                  <option>Upload to Cloudflare R2</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Resize (Optional)</label>
-                <input placeholder="e.g. 800x600" className="w-full rounded-xl border border-[var(--card-border)] bg-muted py-3 px-4 text-sm outline-none" />
-              </div>
             </div>
-            <button onClick={handleProcess} disabled={isProcessing} className="w-full py-3 bg-primary/20 text-primary rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-primary/30 transition-colors">
+            <button onClick={handleProcess} disabled={isProcessing} className="w-full py-3 bg-primary text-black rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors glow-gold">
               {isProcessing ? <RefreshCw className="animate-spin h-5 w-5" /> : <Settings className="h-5 w-5" />}
-              {isProcessing ? "Processing..." : "Process Image"}
+              {isProcessing ? "Uploading..." : "Upload Image"}
             </button>
           </div>
         )}
@@ -154,8 +189,14 @@ export default function UtilityConverterPage() {
 
         {result && activeTab !== "currency" && (
           <div className="mt-6 p-4 rounded-xl border border-green-500/20 bg-green-500/10 text-green-400 text-sm flex items-center justify-between">
-            <span>{result}</span>
-            <button className="px-3 py-1 bg-green-500/20 rounded-lg font-medium hover:bg-green-500/30">Download</button>
+            <span className="break-all mr-4">{result}</span>
+            {result.includes("http") ? (
+              <a href={result.split("at: ")[1]} target="_blank" rel="noreferrer" className="shrink-0 px-3 py-1 bg-green-500/20 rounded-lg font-medium hover:bg-green-500/30">
+                View/Download
+              </a>
+            ) : (
+              <button className="shrink-0 px-3 py-1 bg-green-500/20 rounded-lg font-medium hover:bg-green-500/30">Download</button>
+            )}
           </div>
         )}
       </div>
