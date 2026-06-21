@@ -20,49 +20,31 @@ export default function TradingDashboard() {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   useEffect(() => {
-    // Generate dummy detail line data inside useEffect to avoid hydration mismatch
-    const generateChartData = (basePrice: number) => {
-      return Array.from({ length: 20 }, (_, i) => ({
-        time: `${i}:00`,
-        price: basePrice + (Math.random() - 0.5) * (basePrice * 0.05)
-      }));
+    const fetchSignals = async () => {
+      try {
+        const res = await fetch("/api/trading/signals");
+        const data = await res.json();
+
+        if (data.signals && data.signals.length > 0) {
+          setSignals(data.signals);
+          // Only set the initial selected signal if none is selected yet
+          setSelectedSignal(prev => prev || data.signals[0]);
+          setLastUpdate(new Date());
+        }
+      } catch (error) {
+        console.error("Failed to fetch trading signals:", error);
+      }
     };
 
-    const initialSignals: Signal[] = [
-      { id: "1", pair: "BTC/USD", type: "BUY", price: 65430.50, confidence: 0.92, timestamp: new Date().toISOString(), detail_line: generateChartData(65430) },
-      { id: "2", pair: "ETH/USD", type: "SELL", price: 3450.20, confidence: 0.85, timestamp: new Date(Date.now() - 60000).toISOString(), detail_line: generateChartData(3450) },
-      { id: "3", pair: "SOL/USD", type: "BUY", price: 145.80, confidence: 0.78, timestamp: new Date(Date.now() - 120000).toISOString(), detail_line: generateChartData(145) },
-      { id: "4", pair: "EUR/USD", type: "SELL", price: 1.0850, confidence: 0.88, timestamp: new Date(Date.now() - 300000).toISOString(), detail_line: generateChartData(1.085) },
-      { id: "5", pair: "XAU/USD", type: "BUY", price: 2350.10, confidence: 0.95, timestamp: new Date(Date.now() - 600000).toISOString(), detail_line: generateChartData(2350) },
-    ];
+    fetchSignals(); // Initial fetch
 
-    setSignals(initialSignals);
-    setSelectedSignal(initialSignals[0]);
-    setLastUpdate(new Date());
-  }, []);
-
-  // Polling simulation every 10 seconds
-  useEffect(() => {
-    if (signals.length === 0) return;
-
+    // Poll every 10 seconds
     const interval = setInterval(() => {
-      setLastUpdate(new Date());
-      // Randomly update the price of the first signal to simulate live data
-      setSignals(prev => {
-        const updated = [...prev];
-        const newPrice = updated[0].price + (Math.random() - 0.5) * 100;
-        updated[0] = {
-          ...updated[0],
-          price: newPrice,
-          timestamp: new Date().toISOString(),
-          detail_line: [...updated[0].detail_line.slice(1), { time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}), price: newPrice }]
-        };
-        return updated;
-      });
+      fetchSignals();
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [signals.length]);
+  }, []);
 
   // Ensure selected signal stays updated when signals change
   useEffect(() => {
