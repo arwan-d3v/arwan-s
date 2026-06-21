@@ -2,8 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## [v1.0.0] - 2024-05-20 (Release Date)
+## [Unreleased]
 
+### Fixed
+- Fixed z-index overlap issue on the dashboard notification dropdown.
+- Fixed malformed Supabase URL in environment configurations.
+
+### Changed
+- Configured real environment variables for Supabase, Cloudflare R2, Stripe, Gemini, and Telegram to transition from Mock to Production-ready state.
+
+## [v1.0.0] - 2024-05-20 (Release Date)
 ### Added
 - **Core Ecosystem:** Interactive Gateway (`/`), Resume (`/resume`), Services (`/services`), Explore (`/explore`), and Login (`/login`) pages.
 - **UI Design System:** Comprehensive Zenitsu Agatsuma aesthetic implementation incorporating "Liquid Glass", "Claymorphism", and dynamic lightning particle effects.

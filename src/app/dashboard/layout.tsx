@@ -60,7 +60,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen relative max-w-full overflow-hidden">
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-[var(--card-border)] bg-black/20 px-6 backdrop-blur-md">
+        <header className="relative z-50 flex h-16 shrink-0 items-center justify-between border-b border-[var(--card-border)] bg-black/20 px-6 backdrop-blur-md">
           <div className="flex items-center md:hidden">
              <button aria-label="Open Menu" onClick={() => setIsSidebarOpen(true)} className="text-muted-foreground hover:text-primary">
                 <Menu className="h-6 w-6" />

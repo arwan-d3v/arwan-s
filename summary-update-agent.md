@@ -83,3 +83,14 @@
 ### [x] Task 4 & 5: Deployment Prep & Documentation
 - [x] Prepare project for Vercel deployment
 - [x] Add release notes and handoff instructions in `README.md` and `CHANGELOG.md`
+
+## 🚀 Phase 5 (Post-Deployment Prep & Fixes)
+
+### [x] Task 1: Environment Variables Setup
+- [x] Configure real Supabase URL and Keys
+- [x] Configure Cloudflare R2 Keys
+- [x] Configure Stripe Webhook Secret
+- [x] Configure Gemini API Key and Telegram Bot Token
+
+### [x] Task 2: UI/UX Bug Fixes
+- [x] Fix z-index stacking issue on dashboard notification dropdown
