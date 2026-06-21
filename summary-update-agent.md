@@ -94,3 +94,34 @@
 
 ### [x] Task 2: UI/UX Bug Fixes
 - [x] Fix z-index stacking issue on dashboard notification dropdown
+
+## 🔍 Phase 5 Debugging & Audit Results
+Following the transition from Mock environment to Production environment using the new `.env.local` credentials, a deep scan and audit were performed across the application. Below are the findings and actions taken.
+
+### ✅ Minor Fixes Applied
+- **Linting & Build:** Fixed a minor ESLint warning in `src/app/dashboard/converter/page.tsx` where an `<Image>` element lacked an `alt` attribute. The application now compiles cleanly with `npm run build` (zero errors, only expected warnings for Edge Runtime with Supabase).
+- **Static Analysis:** Verified that `middleware.ts` correctly bypasses the mock session logic when `NEXT_PUBLIC_SUPABASE_URL` is present and attempts to use the real Supabase client.
+
+### ⚠️ Complex Issues Requiring Review & Approval
+During the audit, several core features were found to still be utilizing mock logic or pseudocode, requiring architectural decisions and actual backend implementations:
+
+1. **Payment Webhooks (Stripe & Midtrans):**
+   - The webhooks in `api/payment/stripe-webhook` and `api/payment/midtrans-webhook` lack the official signature validation (e.g., using `stripe.webhooks.constructEvent` or crypto modules for Midtrans).
+   - The database update logic inside these webhooks is just pseudocode comments. It needs real `@supabase/ssr` logic to update the `subscriptions` table.
+
+2. **Supabase Integration & Fallbacks:**
+   - Some API routes still have fallback logic or mock returns commented out, while others assume a specific schema (e.g., `profiles` or `contact_submissions`) that needs to be definitively synced with the Supabase dashboard setup.
+
+3. **Gemini AI Integration:**
+   - The `AiCompanion` component (`src/components/services/ai-companion.tsx`) is hardcoded to use a `mockReply` function. It needs to be wired up to a backend API route that securely utilizes the `GEMINI_API_KEY`.
+
+4. **Telegram Bot Integration:**
+   - The contact route (`src/app/api/contact/route.ts`) attempts to send Telegram messages but relies on a `TELEGRAM_CHAT_ID` environment variable that was not provided in the `.env.local` configuration.
+
+5. **Utility Converter & Cloudflare R2:**
+   - The converter UI (`src/app/dashboard/converter/page.tsx`) uses a `setTimeout` to simulate file processing. It needs a backend API route to handle real file uploads to Cloudflare R2 using `CLOUDFLARE_R2_ACCESS_KEY_ID`, `SECRET`, and `BUCKET_NAME`.
+
+6. **Trading Dashboard:**
+   - The trading module (`src/app/dashboard/trading/page.tsx`) uses purely frontend dummy data generation for charts and signals. It requires a real data source or backend API integration.
+
+**Next Steps:** These complex issues require substantial code updates. Please review the findings above and advise if you would like me to proceed with implementing the actual backend logic for any of these specific areas.
