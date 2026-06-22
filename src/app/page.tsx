@@ -14,12 +14,31 @@ import { getActiveTheme } from "@/lib/theme-service";
 import { Logo } from "@/components/logo";
 import { Reveal } from "@/components/reveal";
 
-export default async function GatewayPage() {
-  const theme = await getActiveTheme();
+interface Props {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default async function GatewayPage({ searchParams }: Props) {
+  let theme = await getActiveTheme();
+
+  // Support real-time live preview from Admin Builder
+  if (searchParams.preview_theme_data && typeof searchParams.preview_theme_data === "string") {
+    try {
+      const previewData = JSON.parse(decodeURIComponent(searchParams.preview_theme_data));
+      theme = { ...theme, ...previewData };
+    } catch (err) {
+      console.warn("Invalid preview theme data:", err);
+    }
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden">
-      <VideoBackground className="z-0" src={theme.videoPath} />
+      <VideoBackground 
+        className="z-0" 
+        src={theme.videoPath} 
+        srcPortrait={theme.videoPortraitPath}
+        focalPoint={theme.focalPoint}
+      />
       <ThunderBackground className="z-5" />
 
       <div className="relative z-10 flex flex-col min-h-screen">

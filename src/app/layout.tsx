@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { getActiveTheme } from "@/lib/theme-service";
+import { PublicThemeSwitcher } from "@/components/public-theme-switcher";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -48,7 +49,10 @@ export default async function RootLayout({
       data-theme={theme.id}
       className={`${inter.variable} ${grotesk.variable} bg-background antialiased`}
     >
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        <PublicThemeSwitcher />
+        {children}
+      </body>
     </html>
   );
 }

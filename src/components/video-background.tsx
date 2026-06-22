@@ -2,14 +2,39 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function VideoBackground({ className = "z-0", src = "/zenitsu-bg.mp4" }: { className?: string; src?: string }) {
+interface VideoBackgroundProps {
+  className?: string;
+  src?: string;
+  srcPortrait?: string;
+  focalPoint?: string;
+}
+
+export function VideoBackground({ 
+  className = "z-0", 
+  src = "/zenitsu-bg.mp4",
+  srcPortrait,
+  focalPoint = "50% 50%"
+}: VideoBackgroundProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasVideoError, setHasVideoError] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(false);
+
+  // Detect orientation for hybrid video support
+  useEffect(() => {
+    const mql = window.matchMedia("(orientation: portrait)");
+    setIsPortrait(mql.matches);
+    
+    const handler = (e: MediaQueryListEvent) => setIsPortrait(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  const activeSrc = (isPortrait && srcPortrait) ? srcPortrait : src;
 
   // Force mute and play programmatically whenever src changes to bypass React hydration autoplay issues
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
+    if (video && activeSrc) {
       video.muted = true;
       video.defaultMuted = true;
       video.load(); // Force browser to load the new video source
@@ -22,9 +47,9 @@ export function VideoBackground({ className = "z-0", src = "/zenitsu-bg.mp4" }: 
         });
       }
     }
-  }, [src]);
+  }, [activeSrc]);
 
-  if (hasVideoError) {
+  if (hasVideoError || !activeSrc) {
     return null;
   }
 
@@ -35,13 +60,14 @@ export function VideoBackground({ className = "z-0", src = "/zenitsu-bg.mp4" }: 
 
       <video
         ref={videoRef}
-        src={src}
+        src={activeSrc}
         autoPlay
         loop
         muted
         playsInline
+        style={{ objectPosition: focalPoint }}
         onError={() => {
-          console.error("Failed to load background video /zenitsu-bg.mp4");
+          console.error(`Failed to load background video ${activeSrc}`);
           setHasVideoError(true);
         }}
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-60 transition-opacity duration-1000"

@@ -56,8 +56,14 @@ All notable changes to this project will be documented in this file.
 
 ## [v1.1.0] - 2025-06-22
 ### Added
-- Anti-Gravity Video Background themes (Zenitsu, Gojo, Igris)
-- Public Theme Manager di Command Center (/admin/themes)
-- Dynamic palette & CSS variables berdasarkan tema aktif
-- VideoBackground component untuk halaman publik
-- ThemeProvider global context
+- **Anti-Gravity Video Background themes:** Built-in Zenitsu, Gojo, and Igris themes with looping video logic.
+- **Dynamic Palette System:** Dynamic CSS variables derived directly from the active theme's JSON payload.
+- **Hybrid Cross-Platform Video Hooks:** Implemented `window.matchMedia` orientation sensors to dynamically swap between Landscape (16:9) and Portrait (9:16) video assets.
+- **Advanced Live Theme Builder (`/admin/settings`):** Developed a fully responsive Split-Screen Builder UI with:
+  - Real-time `iframe` live previews.
+  - Interactive **Drag-to-Focus** visual crosshair for granular mobile crop controls (`object-position`).
+  - Direct `.mp4` client-side upload functionality piped into Supabase Storage buckets.
+- **Theme Manager Protection:** Hardened API routing to prevent accidental deletion of core system themes.
+
+### Changed
+- **No-Code Theme Architecture:** Completely decoupled the theme engine from hardcoded TS files, migrating all logic to dynamic `theme_configs` and `admin_config` SQL tables.

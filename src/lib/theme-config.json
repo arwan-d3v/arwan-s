@@ -1,0 +1,17 @@
+{
+  "activeTheme": {
+    "id": "gojo",
+    "name": "Satoru Gojo",
+    "videoPath": "gojo-bg.mp4",
+    "focalPoint": "50% 50%",
+    "editionLabel": "Limitless Void · Gojo Edition",
+    "accentName": "Blue",
+    "palette": {
+      "text": "#F5F5F5",
+      "accent": "#d946ef",
+      "primary": "#4A90D9",
+      "secondary": "#1a1a1a",
+      "background": "#0d0d0d"
+    }
+  }
+}

@@ -2,8 +2,17 @@ export interface ThemeConfig {
   id: string;
   name: string;
   videoPath: string;
+  videoPortraitPath?: string;
+  focalPoint?: string;
   editionLabel: string;
   accentName: string;
+  palette?: {
+    primary: string;
+    secondary: string;
+    background: string;
+    text: string;
+    accent: string;
+  };
 }
 
 export const themes: Record<string, ThemeConfig> = {

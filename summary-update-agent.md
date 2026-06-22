@@ -277,3 +277,48 @@ NEXT_PUBLIC_R2_PUBLIC_URL=...
 - Established `ThemeProvider` context (`src/components/theme-provider.tsx`) and wrapped root layout `src/app/layout.tsx`.
 - Refactored `VideoBackground` (`src/components/video-background.tsx`) to listen to actual video source context.
 - Modified public pages `src/app/page.tsx`, `src/app/resume/page.tsx`, `src/app/explore/page.tsx`, and `src/app/services/page.tsx` to mount video background dynamically based on theme.
+
+## 🚀 Phase 11: Hybrid Video Backgrounds & No-Code Architecture (Completed)
+
+### [x] Task 1: Schema Updates
+- Applied `0002_theme_crud_hybrid.sql` migration to add `video_portrait`, `focal_point`, `edition_label`, and `accent_name` to `theme_configs`.
+- Protected default system themes (`zenitsu`, `gojo`, `igris`) from accidental deletion in UI and API.
+
+### [x] Task 2: Responsive Video Rendering
+- Updated `VideoBackground` to utilize `window.matchMedia("(orientation: portrait)")` to dynamically swap to `videoPortraitPath`.
+- Implemented CSS `object-position` parsing based on the database-stored `focalPoint` string to ensure accurate crops on mobile devices.
+
+### [x] Task 3: No-Code Theme Service Refactor
+- Refactored `src/lib/theme-service.ts` to fetch full theme configuration dynamically from the `theme_configs` table instead of relying on hardcoded `themes.ts`.
+- Resolved naming collision by properly referencing the `admin_config` table over the legacy `site_settings`.
+
+## 🚀 Phase 12: Advanced Live Theme Builder (Completed)
+
+### [x] Task 1: Client-Side Uploads
+- Created `0003_create_theme_assets_bucket.sql` to establish a public `theme-assets` storage bucket.
+- Integrated `@supabase/supabase-js` to directly handle `.mp4` file uploads to Supabase Storage within the form.
+
+### [x] Task 2: Split-Screen Live Preview UI
+- Overhauled `src/app/admin/settings/page.tsx` layout into a responsive Split-Screen Builder.
+- Injected real-time form state into an `<iframe>` rendering the index page `/?preview_theme_data=...` for a 100% accurate live preview.
+- Added a Mobile/Desktop Viewport toggle within the Live Preview section.
+- Added a prominent Warning Banner for mobile administrators advising Desktop usage for the complex editing tools.
+
+### [x] Task 3: Interactive Drag-to-Focus
+- Developed `DragFocusSelector` component to replace static X/Y sliders.
+- Users can visually click and drag a crosshair ring over the video thumbnail to precisely define the mobile cropping focal point.
+
+---
+
+## 🎨 Rekomendasi Design Lanjutan (Future UI/UX Enhancements)
+
+1. **Public Preview / "Ads" Suggestion:**
+   - Sesuai permintaan awal, sangat direkomendasikan untuk menambahkan sebuah *Header Banner* yang *floating* atau animasi sapaan (contoh: "Hey! Try exploring different aesthetic views 🎨") di halaman publik (untuk `role=public`).
+   - Fitur ini akan menyimpan pilihan tema di *LocalStorage* browser (bukan DB) agar pengunjung anonim bisa merasakan pengalaman berganti-ganti tema secara instan tanpa perlu mendaftar.
+   - Bisa dipadukan dengan animasi "micro-interaction" saat pengguna meng-hover tombol ganti tema.
+
+2. **Dashboard Dark Mode Polishing:**
+   - Memastikan semua komponen di dalam `/dashboard` merespon palet warna kustom dari tema yang sedang aktif. Saat ini *glow* dan *particles* ada di landing page, tetapi dashboard utama bisa ditingkatkan estetika *glassmorphism*-nya.
+
+3. **Transition Animations:**
+   - Menambahkan Page Transitions menggunakan Framer Motion agar perpindahan dari `/` ke `/explore` atau `/resume` terasa seperti aplikasi *Native* tanpa kedipan (*flash*).
