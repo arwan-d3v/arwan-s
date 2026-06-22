@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Wrench,
 } from "lucide-react";
+import { VideoBackground } from "@/components/video-background";
 import { ThunderBackground } from "@/components/thunder-background";
 import { Logo } from "@/components/logo";
 import { Reveal } from "@/components/reveal";
@@ -15,9 +16,11 @@ import { Reveal } from "@/components/reveal";
 export default function GatewayPage() {
   return (
     <main className="relative min-h-screen overflow-hidden">
-      <ThunderBackground />
+      <VideoBackground className="z-0" />
+      <ThunderBackground className="z-5" />
 
-      {/* Top bar */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Top bar */}
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <Logo />
         <Link
@@ -157,6 +160,7 @@ export default function GatewayPage() {
           <p>© {new Date().getFullYear()} Arwan&apos;space · Zenitsu Edition</p>
         </div>
       </footer>
+      </div>
     </main>
   );
 }

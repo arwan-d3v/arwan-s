@@ -177,6 +177,17 @@ Successfully ran local cURL tests against key endpoints:
 ### ✅ Build Verification
 - Result: **Zero Errors, Zero Warnings**. `npm run build` generates all static and dynamic chunks successfully.
 
+## 🚀 Phase 8: UI/UX Animated Video Background Enhancement (Completed)
+
+### [x] Task 1: Video Background Component
+- Created `src/components/video-background.tsx` to handle background playback of local MP4 file `/zenitsu-bg.mp4` with a semi-transparent dark overlay.
+- Programmed native `.muted = true` and `.defaultMuted = true` hooks in React `useEffect` to ensure seamless client-side autoplay across all web browsers.
+
+### [x] Task 2: Layout Layering & CSS Refactoring
+- Decoupled `VideoBackground` (z-index: -20) and `ThunderBackground` (z-index: -10) as sibling components in the landing page `src/app/page.tsx` for optimal paint stacking.
+- Relocated background gradient and color variables from `body` to `html` inside `src/app/globals.css` so that body transparency prevents negative z-index canvas overlays from being hidden.
+- Fixed React hydration mismatch issues in the drift particle generator by adding a React client-mount check.
+
 ---
 
 ## 🚀 Deployment Recommendations for Vercel

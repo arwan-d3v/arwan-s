@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Particle = {
   left: string;
@@ -14,7 +14,13 @@ type Particle = {
  * Slow-drifting golden lightning particles for public pages.
  * Decorative only — hidden from assistive tech.
  */
-export function ThunderBackground() {
+export function ThunderBackground({ className = "-z-10" }: { className?: string }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const particles = useMemo<Particle[]>(() => {
     const seeded = (n: number) => {
       const x = Math.sin(n * 999.13) * 10000;
@@ -29,10 +35,14 @@ export function ThunderBackground() {
     }));
   }, []);
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className={`pointer-events-none fixed inset-0 overflow-hidden ${className}`}
     >
       {/* ambient glow */}
       <div className="absolute left-1/2 top-0 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
@@ -49,8 +59,8 @@ export function ThunderBackground() {
           style={{
             left: p.left,
             top: p.top,
-            width: p.size,
-            height: p.size,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
             animationDelay: p.delay,
             animationDuration: p.duration,
             boxShadow: "0 0 12px 2px rgba(255,210,63,0.6)",

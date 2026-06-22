@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- **Interactive Video Background:** Developed a client-side `VideoBackground` component to autoplay, loop, and mute local background video `/zenitsu-bg.mp4` on the landing page, overlaid with drifting lightning particles.
+
+### Fixed
+- **React Hydration Autoplay Bug:** Resolved issues preventing browser video autoplay by forcing `.muted` and `.defaultMuted` programmatically inside a `useEffect` hook.
+- **CSS Z-Index Stacking:** Relocated solid background color declarations from `body` to `html` in `globals.css` to prevent negative z-index background elements from disappearing behind the body.
+- **Hydration Mismatch warnings:** Fixed random seed mismatches on client/server rendering of lightning particles by implementing a `mounted` check in `ThunderBackground`.
+- **Z-index overlay:** Fixed z-index overlap issue on the dashboard notification dropdown.
+- **Supabase configuration:** Fixed malformed Supabase URL in environment configurations.
+
+### Changed
+- Configured real environment variables for Supabase, Cloudflare R2, Stripe, Gemini, and Telegram to transition from Mock to Production-ready state.
+
 ## [v1.0.0] - Production Launch Release
 ### Added
 - **Production API Integrations:** Transitioned from mock data to real API integrations across the ecosystem.
