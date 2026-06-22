@@ -53,3 +53,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Configured real environment variables for Supabase, Cloudflare R2, Stripe, Gemini, and Telegram to achieve Production-ready state.
 - Graceful fallbacks implemented across all API endpoints to prevent 500 errors if keys are missing in the runtime environment.
+
+## [v1.1.0] - 2025-06-22
+### Added
+- Anti-Gravity Video Background themes (Zenitsu, Gojo, Igris)
+- Public Theme Manager di Command Center (/admin/themes)
+- Dynamic palette & CSS variables berdasarkan tema aktif
+- VideoBackground component untuk halaman publik
+- ThemeProvider global context
