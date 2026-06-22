@@ -13,6 +13,7 @@
   --primary: #ffd23f; /* electric thunder gold */
   --primary-strong: #ffb800;
   --primary-foreground: #100c02;
+  --primary-glow: rgba(255, 210, 63, 0.65);
 
   --accent: #e23636; /* crimson red */
   --accent-foreground: #fff5f5;
@@ -28,6 +29,36 @@
   --lime: #39ff14;
 
   --radius: 1.75rem;
+}
+
+/* Satoru Gojo — Blue Theme */
+[data-theme="gojo"] {
+  --primary: #00a3ff; /* electric blue */
+  --primary-strong: #0066ff;
+  --primary-foreground: #020c1b;
+  --primary-glow: rgba(0, 163, 255, 0.65);
+
+  --accent: #d946ef; /* hollow purple */
+  --accent-foreground: #fdf4ff;
+
+  --border: rgba(0, 163, 255, 0.25);
+  --ring: rgba(0, 163, 255, 0.55);
+  --card-border: rgba(0, 163, 255, 0.18);
+}
+
+/* Shadow Commander Igris — Purple Theme */
+[data-theme="igris"] {
+  --primary: #a855f7; /* royal purple */
+  --primary-strong: #7c3aed;
+  --primary-foreground: #0c021b;
+  --primary-glow: rgba(168, 85, 247, 0.65);
+
+  --accent: #ef4444; /* blood crimson */
+  --accent-foreground: #fef2f2;
+
+  --border: rgba(168, 85, 247, 0.25);
+  --ring: rgba(168, 85, 247, 0.55);
+  --card-border: rgba(168, 85, 247, 0.18);
 }
 
 * {

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { getActiveTheme } from "@/lib/theme-service";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -34,14 +35,17 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const theme = await getActiveTheme();
+
   return (
     <html
       lang="en"
+      data-theme={theme.id}
       className={`${inter.variable} ${grotesk.variable} bg-background antialiased`}
     >
       <body className="font-sans">{children}</body>

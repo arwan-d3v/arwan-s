@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- **Interactive Video Background:** Developed a client-side `VideoBackground` component to autoplay, loop, and mute local background video `/zenitsu-bg.mp4` on the landing page, overlaid with drifting lightning particles.
+- **Dynamic Multi-Theme System:** Developed a site-wide modular theming architecture supporting real-time configuration by a Superadmin (or `admin@arwan.space`) in the Command Center settings panel.
+- **Preconfigured Character Themes:** Implemented three distinct themes:
+  - **Zenitsu Agatsuma (Yellow):** Autoplay loop `/zenitsu-bg.mp4` with electric yellow glows.
+  - **Satoru Gojo (Blue):** Autoplay loop `/gojo-bg.mp4` with deep blue infinity glows.
+  - **Shadow Commander Igris (Purple):** Autoplay loop `/igris-bg.mp4` with dark purple shadow glows.
+- **Settings API (`/api/settings/theme`):** Added GET/POST endpoints for retrieval and real-time updates of the active theme.
+- **Supabase & JSON Fallback Cache:** Designed theme persistence using the Supabase `site_settings` table (key `active_theme`) with a robust local JSON file fallback (`src/lib/theme-config.json`).
+- **Interactive Video Background:** Developed a client-side `VideoBackground` component to autoplay, loop, and mute the active background video on the landing page, overlaid with drifting particles that match the active theme's colors.
 
 ### Fixed
 - **React Hydration Autoplay Bug:** Resolved issues preventing browser video autoplay by forcing `.muted` and `.defaultMuted` programmatically inside a `useEffect` hook.
@@ -13,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - **Hydration Mismatch warnings:** Fixed random seed mismatches on client/server rendering of lightning particles by implementing a `mounted` check in `ThunderBackground`.
 - **Z-index overlay:** Fixed z-index overlap issue on the dashboard notification dropdown.
 - **Supabase configuration:** Fixed malformed Supabase URL in environment configurations.
+- **ESLint & TypeScript Errors:** Fixed strict type errors (`any` catch bindings, unused variables) in `src/app/api/settings/theme/route.ts` and `src/lib/theme-service.ts`.
 
 ### Changed
 - Configured real environment variables for Supabase, Cloudflare R2, Stripe, Gemini, and Telegram to transition from Mock to Production-ready state.

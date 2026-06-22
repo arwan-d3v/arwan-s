@@ -63,7 +63,7 @@ export function ThunderBackground({ className = "-z-10" }: { className?: string 
             height: `${p.size}px`,
             animationDelay: p.delay,
             animationDuration: p.duration,
-            boxShadow: "0 0 12px 2px rgba(255,210,63,0.6)",
+            boxShadow: "0 0 12px 2px var(--primary-glow)",
             opacity: 0.5,
           }}
         />

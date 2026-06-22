@@ -10,13 +10,16 @@ import {
 } from "lucide-react";
 import { VideoBackground } from "@/components/video-background";
 import { ThunderBackground } from "@/components/thunder-background";
+import { getActiveTheme } from "@/lib/theme-service";
 import { Logo } from "@/components/logo";
 import { Reveal } from "@/components/reveal";
 
-export default function GatewayPage() {
+export default async function GatewayPage() {
+  const theme = await getActiveTheme();
+
   return (
     <main className="relative min-h-screen overflow-hidden">
-      <VideoBackground className="z-0" />
+      <VideoBackground className="z-0" src={theme.videoPath} />
       <ThunderBackground className="z-5" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
@@ -37,7 +40,7 @@ export default function GatewayPage() {
         <Reveal>
           <span className="glass mb-8 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-primary">
             <Sparkles className="h-3.5 w-3.5" />
-            Thunder Breathing · Zenitsu Edition
+            {theme.editionLabel}
           </span>
         </Reveal>
 

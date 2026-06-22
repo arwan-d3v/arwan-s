@@ -2,16 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function VideoBackground({ className = "z-0" }: { className?: string }) {
+export function VideoBackground({ className = "z-0", src = "/zenitsu-bg.mp4" }: { className?: string; src?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasVideoError, setHasVideoError] = useState(false);
 
-  // Force mute and play programmatically to bypass React hydration autoplay issues
+  // Force mute and play programmatically whenever src changes to bypass React hydration autoplay issues
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
       video.muted = true;
       video.defaultMuted = true;
+      video.load(); // Force browser to load the new video source
       
       // Attempt to play
       const playPromise = video.play();
@@ -21,7 +22,7 @@ export function VideoBackground({ className = "z-0" }: { className?: string }) {
         });
       }
     }
-  }, []);
+  }, [src]);
 
   if (hasVideoError) {
     return null;
@@ -34,7 +35,7 @@ export function VideoBackground({ className = "z-0" }: { className?: string }) {
 
       <video
         ref={videoRef}
-        src="/zenitsu-bg.mp4"
+        src={src}
         autoPlay
         loop
         muted
