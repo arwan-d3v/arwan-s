@@ -43,6 +43,7 @@ export default function AdminSettingsPage() {
       }
       
       if (dataAll.themes) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mappedThemes: ThemeConfig[] = dataAll.themes.map((t: any) => ({
           id: t.id,
           name: t.name,
@@ -86,7 +87,7 @@ export default function AdminSettingsPage() {
       } else {
         setMessage({ text: data.error || "Failed to update theme.", type: "error" });
       }
-    } catch (err: unknown) {
+    } catch {
       setMessage({ text: "A network error occurred.", type: "error" });
     } finally {
       setUpdatingId(null);
@@ -135,7 +136,7 @@ export default function AdminSettingsPage() {
         const data = await res.json();
         setMessage({ text: data.error || "Failed to save theme.", type: "error" });
       }
-    } catch (err) {
+    } catch {
       setMessage({ text: "Network error saving theme.", type: "error" });
     } finally {
       setUpdatingId(null);
@@ -150,7 +151,7 @@ export default function AdminSettingsPage() {
         setMessage({ text: "Theme deleted successfully!", type: "success" });
         fetchThemes();
       }
-    } catch (err) {
+    } catch {
       setMessage({ text: "Network error deleting theme.", type: "error" });
     }
   };
@@ -189,9 +190,10 @@ export default function AdminSettingsPage() {
       }
       
       setMessage({ text: "Video uploaded successfully!", type: "success" });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setMessage({ text: `Upload failed: ${err.message}`, type: "error" });
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      setMessage({ text: `Upload failed: ${errorMessage}`, type: "error" });
     } finally {
       if (type === "landscape") setUploadingLandscape(false);
       else setUploadingPortrait(false);
