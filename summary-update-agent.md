@@ -322,3 +322,9 @@ NEXT_PUBLIC_R2_PUBLIC_URL=...
 
 3. **Transition Animations:**
    - Menambahkan Page Transitions menggunakan Framer Motion agar perpindahan dari `/` ke `/explore` atau `/resume` terasa seperti aplikasi *Native* tanpa kedipan (*flash*).
+
+## 🚀 Phase 13: Deployment Bug Fixes (Completed)
+### [x] Task 1: TypeScript and ESLint Resolution
+- Fixed `any` type mappings and exception bindings in `src/app/admin/settings/page.tsx` and `src/app/api/admin/themes/route.ts` to use strict typing (`unknown` / `Error`).
+- Cleaned up unused variable declarations (`err`, `configError`) across theme logic (`src/lib/theme-service.ts`) to comply with Next.js strict build requirements.
+- Validated via `npm run lint` and `npm run build` resulting in zero warnings and errors.

@@ -18,7 +18,7 @@ export async function getActiveTheme(): Promise<ThemeConfig> {
       // We will try to fetch this preview theme from Supabase below, 
       // but if we are offline, it will fallback to hardcoded `themes`.
     }
-  } catch (err) {
+  } catch {
     // Ignore error if called outside request context (e.g. during build)
   }
 
@@ -49,7 +49,7 @@ export async function getActiveTheme(): Promise<ThemeConfig> {
         }
 
         // Fetch FULL theme from theme_configs
-        const { data: configData, error: configError } = await supabase
+        const { data: configData } = await supabase
           .from("theme_configs")
           .select("*")
           .eq("id", targetThemeId)
@@ -110,6 +110,7 @@ export async function getActiveTheme(): Promise<ThemeConfig> {
 }
 
 // Helper to check what the actual global theme is (bypassing preview)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getGlobalActiveThemeId(supabase: any) {
   const { data } = await supabase.from("admin_config").select("value").eq("key", "active_theme_id").single();
   return data?.value || "zenitsu";

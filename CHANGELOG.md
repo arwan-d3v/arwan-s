@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - **Interactive Video Background:** Developed a client-side `VideoBackground` component to autoplay, loop, and mute the active background video on the landing page, overlaid with drifting particles that match the active theme's colors.
 
 ### Fixed
+- **ESLint & TypeScript Vercel Build Errors:** Fixed strict type errors (`any` type bindings in try/catch maps) and removed unused variables in `/admin/settings/page.tsx`, `/api/admin/themes/route.ts`, and `theme-service.ts`.
 - **React Hydration Autoplay Bug:** Resolved issues preventing browser video autoplay by forcing `.muted` and `.defaultMuted` programmatically inside a `useEffect` hook.
 - **CSS Z-Index Stacking:** Relocated solid background color declarations from `body` to `html` in `globals.css` to prevent negative z-index background elements from disappearing behind the body.
 - **Hydration Mismatch warnings:** Fixed random seed mismatches on client/server rendering of lightning particles by implementing a `mounted` check in `ThunderBackground`.
